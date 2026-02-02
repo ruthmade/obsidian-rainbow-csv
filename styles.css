@@ -1,0 +1,95 @@
+/* Fix toggle button icon padding - target the actual view-action in CSV files */
+.view-header .view-actions a.view-action svg {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+.view-header .view-actions a.view-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+/* Mobile-specific fixes - use Obsidian's default icon size */
+.is-mobile .view-header .view-actions a.view-action svg {
+  height: 24px !important;
+  width: 24px !important;
+}
+
+/* Rainbow CSV column colors - Dark theme */
+.theme-dark .csv-col-0 { color: #4ec9b0; } /* cyan */
+.theme-dark .csv-col-1 { color: #ce9178; } /* orange */
+.theme-dark .csv-col-2 { color: #c586c0; } /* purple */
+.theme-dark .csv-col-3 { color: #dcdcaa; } /* yellow */
+.theme-dark .csv-col-4 { color: #9cdcfe; } /* light blue */
+.theme-dark .csv-col-5 { color: #569cd6; } /* blue */
+.theme-dark .csv-col-6 { color: #b5cea8; } /* green */
+.theme-dark .csv-col-7 { color: #d16969; } /* red */
+
+/* Rainbow CSV column colors - Light theme */
+.theme-light .csv-col-0 { color: #0d7d6e; } /* darker cyan */
+.theme-light .csv-col-1 { color: #a15b3c; } /* darker orange */
+.theme-light .csv-col-2 { color: #8e44ad; } /* darker purple */
+.theme-light .csv-col-3 { color: #9a7b00; } /* darker yellow/gold */
+.theme-light .csv-col-4 { color: #0078d4; } /* darker blue */
+.theme-light .csv-col-5 { color: #2e5c8a; } /* dark blue */
+.theme-light .csv-col-6 { color: #3d7a3d; } /* darker green */
+.theme-light .csv-col-7 { color: #c1392b; } /* darker red */
+
+/* Preview mode table */
+.csv-table-container {
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.csv-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9em;
+}
+
+.csv-table th,
+.csv-table td {
+  border: 1px solid var(--background-modifier-border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.csv-table th {
+  background: var(--background-secondary);
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.csv-table tr:nth-child(even) {
+  background: var(--background-primary-alt);
+}
+
+.csv-table tr:hover {
+  background: var(--background-modifier-hover);
+}
+
+/* Header colors match column colors - Dark theme */
+.theme-dark .csv-table th:nth-child(8n+1) { color: #4ec9b0; }
+.theme-dark .csv-table th:nth-child(8n+2) { color: #ce9178; }
+.theme-dark .csv-table th:nth-child(8n+3) { color: #c586c0; }
+.theme-dark .csv-table th:nth-child(8n+4) { color: #dcdcaa; }
+.theme-dark .csv-table th:nth-child(8n+5) { color: #9cdcfe; }
+.theme-dark .csv-table th:nth-child(8n+6) { color: #569cd6; }
+.theme-dark .csv-table th:nth-child(8n+7) { color: #b5cea8; }
+.theme-dark .csv-table th:nth-child(8n+8) { color: #d16969; }
+
+/* Header colors match column colors - Light theme */
+.theme-light .csv-table th:nth-child(8n+1) { color: #0d7d6e; }
+.theme-light .csv-table th:nth-child(8n+2) { color: #a15b3c; }
+.theme-light .csv-table th:nth-child(8n+3) { color: #8e44ad; }
+.theme-light .csv-table th:nth-child(8n+4) { color: #9a7b00; }
+.theme-light .csv-table th:nth-child(8n+5) { color: #0078d4; }
+.theme-light .csv-table th:nth-child(8n+6) { color: #2e5c8a; }
+.theme-light .csv-table th:nth-child(8n+7) { color: #3d7a3d; }
+.theme-light .csv-table th:nth-child(8n+8) { color: #c1392b; }

@@ -1,0 +1,10 @@
+{
+  "id": "rainbow-csv",
+  "name": "Rainbow CSV",
+  "version": "0.1.13",
+  "minAppVersion": "0.15.0",
+  "description": "Color-code CSV columns in edit mode, render as table in preview mode",
+  "author": "Ru",
+  "authorUrl": "https://ruthmade.com",
+  "isDesktopOnly": false
+}
