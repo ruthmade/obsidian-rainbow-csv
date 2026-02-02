@@ -74,6 +74,21 @@
   background: var(--background-modifier-hover);
 }
 
+/* Sortable header styling */
+.csv-sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.csv-sortable-header:hover {
+  background: var(--background-modifier-hover) !important;
+}
+
+.csv-sort-indicator {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
 /* Header colors match column colors - Dark theme */
 .theme-dark .csv-table th:nth-child(8n+1) { color: #4ec9b0; }
 .theme-dark .csv-table th:nth-child(8n+2) { color: #ce9178; }

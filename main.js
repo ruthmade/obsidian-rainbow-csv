@@ -1,4 +1,4 @@
-const { Plugin, TextFileView, setIcon, editorEditorField, editorViewField } = require('obsidian');
+const { Plugin, TextFileView, setIcon } = require('obsidian');
 const { EditorView, Decoration, ViewPlugin } = require('@codemirror/view');
 const { EditorState } = require('@codemirror/state');
 const { RangeSetBuilder } = require('@codemirror/state');
@@ -74,6 +74,7 @@ class CSVFileView extends TextFileView {
     this.plugin = plugin;
     this.previewMode = false;
     this.editorView = null;
+    this.sortState = { column: null, direction: null };
   }
   
   getViewType() {
@@ -102,6 +103,10 @@ class CSVFileView extends TextFileView {
         this.toggleButton.addEventListener('click', (e) => {
           e.preventDefault();
           this.previewMode = !this.previewMode;
+          // Reset sort state when switching to edit mode
+          if (!this.previewMode) {
+            this.sortState = { column: null, direction: null };
+          }
           this.updateToggleButton();
           this.render();
         });
@@ -153,6 +158,24 @@ class CSVFileView extends TextFileView {
     }
   }
   
+  sortTable(columnIndex) {
+    // Toggle sort direction
+    if (this.sortState.column === columnIndex) {
+      if (this.sortState.direction === 'asc') {
+        this.sortState.direction = 'desc';
+      } else if (this.sortState.direction === 'desc') {
+        // Third click: remove sort
+        this.sortState = { column: null, direction: null };
+      } else {
+        this.sortState.direction = 'asc';
+      }
+    } else {
+      this.sortState = { column: columnIndex, direction: 'asc' };
+    }
+    
+    this.render();
+  }
+  
   render() {
     if (!this.contentEl) return;
     
@@ -173,23 +196,63 @@ class CSVFileView extends TextFileView {
       const container = this.contentEl.createEl('div', { cls: 'csv-table-container' });
       const table = container.createEl('table', { cls: 'csv-table' });
       
-      // Header
+      // Parse all data
       const headers = parseCSVLine(lines[0]);
+      const dataRows = [];
+      for (let i = 1; i < lines.length; i++) {
+        dataRows.push(parseCSVLine(lines[i]));
+      }
+      
+      // Sort data if needed
+      if (this.sortState.column !== null && this.sortState.direction) {
+        const colIndex = this.sortState.column;
+        dataRows.sort((a, b) => {
+          const aVal = (a[colIndex] || '').replace(/^"|"$/g, '').trim();
+          const bVal = (b[colIndex] || '').replace(/^"|"$/g, '').trim();
+          
+          // Try numeric comparison first
+          const aNum = parseFloat(aVal);
+          const bNum = parseFloat(bVal);
+          
+          let comparison;
+          if (!isNaN(aNum) && !isNaN(bNum)) {
+            comparison = aNum - bNum;
+          } else {
+            comparison = aVal.localeCompare(bVal);
+          }
+          
+          return this.sortState.direction === 'asc' ? comparison : -comparison;
+        });
+      }
+      
+      // Header row
       const thead = table.createEl('thead');
       const headerRow = thead.createEl('tr');
-      headers.forEach(h => {
-        headerRow.createEl('th', { text: h.replace(/^"|"$/g, '').trim() });
+      headers.forEach((h, index) => {
+        const th = headerRow.createEl('th', { 
+          text: h.replace(/^"|"$/g, '').trim(),
+          cls: 'csv-sortable-header'
+        });
+        
+        // Add sort indicator if this column is sorted
+        if (this.sortState.column === index && this.sortState.direction) {
+          const indicator = th.createSpan({ cls: 'csv-sort-indicator' });
+          indicator.textContent = this.sortState.direction === 'asc' ? ' ▲' : ' ▼';
+        }
+        
+        // Add click handler
+        th.addEventListener('click', () => this.sortTable(index));
+        th.style.cursor = 'pointer';
       });
       
-      // Rows
+      // Data rows
       const tbody = table.createEl('tbody');
-      for (let i = 1; i < lines.length; i++) {
-        const fields = parseCSVLine(lines[i]);
+      dataRows.forEach(fields => {
         const row = tbody.createEl('tr');
         fields.forEach(f => {
           row.createEl('td', { text: f.replace(/^"|"$/g, '').trim() });
         });
-      }
+      });
       
       // Destroy editor if it exists
       if (this.editorView) {
@@ -239,7 +302,7 @@ class CSVFileView extends TextFileView {
 
 module.exports = class RainbowCSVPlugin extends Plugin {
   async onload() {
-    console.log('Rainbow CSV v0.1.4 loaded');
+    console.log('Rainbow CSV v0.1.14 loaded');
     
     // Register custom view for CSV files
     this.registerView('csv-view', (leaf) => new CSVFileView(leaf, this));
