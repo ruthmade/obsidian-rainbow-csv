@@ -210,7 +210,30 @@ class CSVFileView extends TextFileView {
           const aVal = (a[colIndex] || '').replace(/^"|"$/g, '').trim();
           const bVal = (b[colIndex] || '').replace(/^"|"$/g, '').trim();
           
-          // Try numeric comparison first
+          // Try date parsing - recognize various formats
+          const datePatterns = [
+            /^\d{4}-\d{2}-\d{2}$/,                    // YYYY-MM-DD
+            /^\d{1,2}\/\d{1,2}\/\d{4}$/,              // MM/DD/YYYY or DD/MM/YYYY
+            /^\d{1,2}-\d{1,2}-\d{4}$/,                // MM-DD-YYYY or DD-MM-YYYY
+            /^[A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4}$/,   // Month D, YYYY or Month D YYYY
+            /^\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4}$/,      // D Month YYYY
+            /^\d{4}\/\d{1,2}\/\d{1,2}$/               // YYYY/MM/DD
+          ];
+          
+          let isDate = datePatterns.some(p => p.test(aVal) || p.test(bVal));
+          
+          if (isDate) {
+            const aDate = new Date(aVal);
+            const bDate = new Date(bVal);
+            
+            // Check if both parsed to valid dates
+            if (!isNaN(aDate.getTime()) && !isNaN(bDate.getTime())) {
+              const comparison = aDate.getTime() - bDate.getTime();
+              return this.sortState.direction === 'asc' ? comparison : -comparison;
+            }
+          }
+          
+          // Try numeric comparison
           const aNum = parseFloat(aVal);
           const bNum = parseFloat(bVal);
           
@@ -302,7 +325,7 @@ class CSVFileView extends TextFileView {
 
 module.exports = class RainbowCSVPlugin extends Plugin {
   async onload() {
-    console.log('Rainbow CSV v0.1.14 loaded');
+    console.log('Rainbow CSV v0.1.16 loaded');
     
     // Register custom view for CSV files
     this.registerView('csv-view', (leaf) => new CSVFileView(leaf, this));

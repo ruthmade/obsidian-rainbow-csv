@@ -4,11 +4,13 @@ Color-code CSV columns for better readability, with a clean table preview mode.
 
 ## Features
 
-- 🌈 **Rainbow syntax highlighting** - Each CSV column gets its own color in edit mode
-- 📊 **Table preview** - Toggle between edit and table view with one click
-- 🎨 **Theme-aware colors** - Different color palettes for light and dark themes
-- 📱 **Mobile compatible** - Works seamlessly on desktop, iPad, and iPhone
-- 🔤 **Smart parsing** - Correctly handles commas inside quoted fields
+- **Rainbow syntax highlighting** - Each CSV column gets its own color in edit mode
+- **Table preview** - Toggle between edit and table view with one click
+- **Sortable columns** - Click any column header to sort chronologically, numerically, or alphabetically
+- **Smart date sorting** - Recognizes multiple date formats (ISO, US, month names) for proper chronological ordering
+- **Theme-aware colors** - Different color palettes for light and dark themes
+- **Mobile compatible** - Works seamlessly on desktop, iPad, and iPhone
+- **Smart parsing** - Correctly handles commas inside quoted fields
 
 ## Usage
 
